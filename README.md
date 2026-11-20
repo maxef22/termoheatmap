@@ -154,6 +154,26 @@ http://<server>/termoheatmap/tree/roots            → JSON с корневым�
 ровно те локации, которые доступны открывшему его оператору. Сессии оператора нет —
 возвращается 401 и понятное сообщение.
 
+## Как выпустить новую версию
+
+1. Поднять версию в трёх местах: `web/info.xml` (`<version>`), `nbproject/project.properties`
+   (`war.name`), `nbproject/project.xml` (`<name>`); добавить запись в `CHANGELOG.md`
+   и файл `docs/release-v<версия>.md`.
+2. `ant clean dist` → `dist/termoheatmap.addon`.
+3. `git commit`, `git tag -a v<версия> -m "..."`, `git push origin main --tags`,
+   затем опубликовать релиз с файлом:
+
+   ```powershell
+   javac --release 11 -cp ..\json-20251224.jar -d build\release-tool tools\release\PublishRelease.java
+   set GH_TOKEN=<токен с правом Contents: write>
+   java -cp "build\release-tool;..\json-20251224.jar" PublishRelease ^
+        maxef22 termoheatmap v1.1.2 "Termoheatmap 1.1.2" docs\release-v1.1.2.md dist\termoheatmap.addon
+   ```
+
+   Утилита нужна там, где нет `gh` CLI или недоступен TLS-стек Windows (Schannel):
+   Java ходит своим TLS. Повторный запуск безопасен — существующий релиз и файл она не дублирует.
+   Либо то же самое вручную: GitHub → Releases → *Draft a new release* → тег → прикрепить `.addon`.
+
 ## Структура проекта
 
 ```
@@ -161,7 +181,8 @@ src/java/com/controlj/addon/temperature/
   servlet/  TreeRootsServlet, SensorFinderServlet, TemperatureDataServlet
   util/     AddonTime (зона и даты), Stats (процентиль), JsonResponse (ответы и ошибки)
 web/        temperature.jsp, info.xml, WEB-INF/web.xml, META-INF/context.xml
-tools/      debug.jsp (не входит в поставку)
+tools/      debug.jsp (не входит в поставку), selftest/, release/PublishRelease.java
+docs/       release-v<версия>.md
 ```
 
 История изменений — `CHANGELOG.md`.
