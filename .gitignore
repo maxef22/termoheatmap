@@ -1,0 +1,22 @@
+# Сборка
+build/
+dist/
+*.class
+*.war
+*.addon
+*.jar
+
+# NetBeans: локальные настройки машины (пути, Tomcat, ant-задачи)
+nbproject/private/
+nbproject/genfiles.properties
+
+# IDE / ОС
+.idea/
+.vscode/
+*.iml
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Локальные копии релизов
+release/

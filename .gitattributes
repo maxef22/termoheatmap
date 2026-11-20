@@ -1,0 +1,7 @@
+# Бинарные файлы не нормализуем
+*.jar binary
+*.war binary
+*.addon binary
+*.png binary
+*.jpg binary
+*.ico binary
